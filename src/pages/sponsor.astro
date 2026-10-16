@@ -1,9 +1,14 @@
 ---
 import Base from "../layouts/Base.astro";
+import { packages } from "../data/sponsors";
 ---
-<Base title="Sponsor On This Day in Sports" description="Put your brand in front of sports fans every day: logo on the site and in the daily newsletter.">
-<h1>Sponsor this site</h1>
-<p>On This Day in Sports reaches fans who come back daily for classic moments and highlights.</p>
-<h2>What sponsors get</h2><ul><li>Your logo and link in the banner at the top of every page</li><li>Your logo and a short message in the daily newsletter</li></ul>
-<div class="box"><h2>Book a slot</h2><p>Online payment is coming soon. <!-- TODO: Stripe payment link --></p></div>
+<Base title="Sponsor On This Day in Sports | Packages from $49" description="Put your brand in front of sports fans every day. Date page sponsorships from $49, weekly and monthly sitewide packages.">
+<h1>Sponsor On This Day in Sports</h1>
+<p>Every day, sports fans come here to look up what happened on this date in history: classic finals, record-breaking games, legendary birthdays, and odd old facts. They share moments on X, come back daily, and read our daily flashback newsletter.</p>
+<h2>Who visits</h2>
+<ul><li>Sports fans searching "what happened in sports on [date]"</li><li>Fans of the NFL, MLB, NBA, NHL, soccer, golf, F1, boxing, and the Olympics</li><li>People celebrating birthdays and anniversaries who want to know what happened on their day</li></ul>
+<h2>Packages</h2>
+<div class="pk">{packages.map(p=>(<div><h3>{p.name}</h3><div class="price">{p.price}</div><p>{p.term}</p><ul>{p.perks.map(x=><li>{x}</li>)}</ul>
+{p.buyUrl ? <a class="buy" href={p.buyUrl}>Buy {p.name}</a> : <span class="buy off" aria-disabled="true">Payment link coming soon</span>}</div>))}</div>
+<h2>How it works</h2><ol><li>Pick a package and check out.</li><li>Send your logo and link.</li><li>Your placement goes live, no meetings needed.</li></ol>
 </Base>

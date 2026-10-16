@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro"; import Card from "../components/Card.astro"; import Filters from "../components/Filters.astro";
+import { dateSponsors } from "../data/sponsors"; import SponsorBadge from "../components/SponsorBadge.astro";
 import { allDates, eventsFor, SITE } from "../data/dates";
 export function getStaticPaths(){ return allDates.map(d=>({params:{slug:d.slug},props:{d}})); }
 const { d } = Astro.props; const list = eventsFor(d.key);
@@ -10,6 +11,7 @@ const jsonld={"@context":"https://schema.org","@type":"ItemList",name:`Sports mo
 ---
 <Base title={title} description={description} jsonld={jsonld}>
 <h1>What happened in sports on {d.label}</h1>
+{dateSponsors(d.slug).length ? <p class="box">This date is sponsored by {dateSponsors(d.slug).map(s=><SponsorBadge s={s}/>)}</p> : <p style="font-size:.85rem;opacity:.7">Own this date: <a href="/sponsor">sponsor the {d.label} page</a> for a year.</p>}
 <Filters sports={[...new Set(list.map(e=>e.sport))]}/>
 {list.length ? <div class="cards">{list.map(e=><Card e={e} label={d.label} slug={d.slug}/>)}</div> : <p>No moments added for {d.label} yet. Check back soon.</p>}
 <p><a href={`/${prev.slug}`}>← {prev.label}</a> · <a href={`/${next.slug}`}>{next.label} →</a></p>

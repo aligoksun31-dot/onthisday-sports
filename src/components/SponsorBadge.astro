@@ -1,0 +1,4 @@
+---
+const { s } = Astro.props;
+---
+<a class="sp" href={s.url} target="_blank" rel="sponsored noopener">{s.logo ? <img src={s.logo} alt={s.name} height="28"/> : s.name}</a>

@@ -1,5 +1,8 @@
 ---
 import { SITE } from "../data/dates";
+import { active } from "../data/sponsors";
+import SponsorBadge from "../components/SponsorBadge.astro";
+const ticker = active(["weekly","monthly"]);
 const { title, description, jsonld } = Astro.props;
 const url = new URL(Astro.url.pathname, SITE).href;
 ---
@@ -12,7 +15,10 @@ const url = new URL(Astro.url.pathname, SITE).href;
 :root{color-scheme:dark}*{box-sizing:border-box}
 body{margin:0;font-family:system-ui,sans-serif;background:#0b1020;color:#e8ecf5;line-height:1.5}
 a{color:#7cc4ff}main{max-width:1100px;margin:0 auto;padding:1rem}
-.sponsor-bar{position:sticky;top:0;z-index:10;background:#ffcf5c;color:#111;text-align:center;padding:.4rem;font-size:.9rem}.sponsor-bar a{color:#111;font-weight:700}
+.sponsor-bar{background:#0f1730;color:#9aa6c4;text-align:center;padding:.3rem;font-size:.78rem;border-bottom:1px solid #1d2a4f}.sponsor-bar a{color:#c9d3ea}
+.ticker{position:sticky;bottom:0;z-index:10;background:#111a33;border-top:1px solid #24335f;overflow:hidden;white-space:nowrap;font-size:.85rem}.ticker .track{display:inline-flex;gap:2.5rem;padding:.5rem 0;animation:tk 30s linear infinite}.ticker:hover .track{animation-play-state:paused}@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}.ticker a{color:#ffcf5c;text-decoration:none;font-weight:600}.sp img{vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.ticker .track{animation:none}}
+.pk{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}.pk>div{background:#151f3d;border:1px solid #22305a;border-radius:14px;padding:1.2rem;display:flex;flex-direction:column}.price{font-size:2rem;font-weight:800;color:#ffcf5c}.pk ul{flex:1}.buy{display:block;text-align:center;padding:.7rem;border-radius:10px;background:#ffcf5c;color:#111;font-weight:800;text-decoration:none}.buy.off{background:#2a3760;color:#9aa6c4;cursor:default}
 header{background:#111a33;padding:.8rem 1rem;display:flex;gap:1rem;flex-wrap:wrap}header a{color:#fff;text-decoration:none}header .logo{font-weight:800;margin-right:auto}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:1rem 0}
 .ev{background:#151f3d;border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.5rem;border:1px solid #22305a}
@@ -23,13 +29,14 @@ header{background:#111a33;padding:.8rem 1rem;display:flex;gap:1rem;flex-wrap:wra
 .box{border:1px dashed #3a4c80;border-radius:12px;padding:1rem;margin:1.5rem 0}input,button.sub{padding:.6rem;border-radius:8px;border:0;font-size:1rem}button.sub{background:#ffcf5c;font-weight:700}
 iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:8px}footer{text-align:center;opacity:.6;padding:2rem}
 </style></head><body>
-<div class="sponsor-bar">Your logo here — <a href="/sponsor">sponsor this site</a></div>
+<div class="sponsor-bar">{ticker.length ? <>Sponsored by {ticker.map(t=><SponsorBadge s={t}/>)}</> : <>Your logo here · <a href="/sponsor">Sponsor this site</a></>}</div>
 <header><a class="logo" href="/">🏆 On This Day in Sports</a><a href="/facts">Facts</a><a href="/sponsor">Sponsor</a></header>
 <main><slot/>
 <section class="box" id="newsletter"><h2>📬 Get a daily sports flashback</h2>
 <!-- Ready for Resend: create /api/subscribe (Vercel function) and set data-endpoint -->
 <form class="nl" data-endpoint=""><input type="email" name="email" required placeholder="you@email.com" aria-label="Email"/> <button class="sub">Subscribe</button><p class="msg"></p></form></section>
 </main><footer>On This Day in Sports · <a href="/facts">All facts</a> · <a href="/llms.txt">llms.txt</a> · <a href="/sponsor">Sponsor</a></footer>
+<div class="ticker" aria-label="Sponsors"><div class="track">{[0,1].map(()=> <>{ticker.map(t=><span>⭐ <SponsorBadge s={t}/></span>)}<span><a href="/sponsor">🏆 Your logo here — sponsor us</a></span><span><a href="/sponsor">📅 Sponsor a date page from $49</a></span><span><a href="/sponsor">📬 Reach daily sports fans</a></span></>)}</div></div>
 <script>
 document.querySelectorAll("form.nl").forEach(f=>f.addEventListener("submit",async e=>{e.preventDefault();const m=f.querySelector(".msg"),ep=f.dataset.endpoint,email=f.email.value;
 if(!ep){m.textContent="Thanks! The newsletter launches soon.";return}
