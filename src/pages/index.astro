@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import { allDates, eventsFor, MONTHS, cap, SITE } from "../data/dates";
+const data = Object.fromEntries(allDates.map(d=>[d.key,{label:d.label,slug:d.slug,list:eventsFor(d.key)}]));
+const jsonld={"@context":"https://schema.org","@type":"WebSite",name:"On This Day in Sports",url:SITE};
+---
+<Base title="On This Day in Sports: Sports history for every date" description="Discover what happened in sports today and on every date in history: classic moments, wild facts and highlights." jsonld={jsonld}>
+<h1 id="h">Today in sports history</h1><div id="filt" class="filters"></div><div id="today" class="cards"><p>Loading today's moments…</p></div><p id="more"></p>
+<h2>Browse by month</h2>
+{MONTHS.map((m,i)=>(<section><h3>{cap(m)}</h3><div class="grid">{allDates.filter(d=>d.month===i+1).map(d=><a class={eventsFor(d.key).length?"has":""} href={`/${d.slug}`}>{d.day}</a>)}</div></section>))}
+<script define:vars={{data,SITE}}>
+const t=new Date(),k=String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"),d=data[k];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const enc=encodeURIComponent;
+document.getElementById("h").textContent="Today in sports history: "+d.label;
+document.getElementById("today").innerHTML=d.list.length?d.list.map(e=>`<article class="ev" data-sport="${esc(e.sport)}"><div><span class="yr">${e.year}</span><span class="tag">${esc(e.sport)}</span>${e.kind==="birthday"?"<span class=\"tag\">🎂 Birthday</span>":""}</div><p>${esc(e.text)}</p><div class="acts"><a class="btn" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(e.year+" "+e.text.split(/[.:,]/)[0]+" highlights")}">▶ Watch highlights</a><a class="btn x" target="_blank" rel="noopener" href="https://x.com/intent/tweet?text=${enc("On "+d.label+", "+e.year+": "+e.text)}&url=${enc(SITE+"/"+d.slug)}">Share on 𝕏</a></div></article>`).join(""):"<p>No moments added for today yet.</p>";
+const sp=[...new Set(d.list.map(e=>e.sport))];
+if(sp.length>1)document.getElementById("filt").innerHTML='<button class="on" data-sport="all">All</button>'+sp.map(s=>`<button data-sport="${esc(s)}">${esc(s)}</button>`).join("");
+document.getElementById("more").innerHTML=`<a href="/${d.slug}">See the full ${d.label} page →</a>`;
+</script>
+</Base>

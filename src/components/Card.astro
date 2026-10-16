@@ -1,0 +1,8 @@
+---
+import { ytSearch, SITE } from "../data/dates";
+const { e, label, slug } = Astro.props;
+const share = `https://x.com/intent/tweet?text=${encodeURIComponent(`On ${label}, ${e.year}: ${e.text}`)}&url=${encodeURIComponent(`${SITE}/${slug}`)}`;
+---
+<article class="ev" data-sport={e.sport}><div><span class="yr">{e.year}</span><span class="tag">{e.sport}</span>{e.kind==="birthday" && <span class="tag">🎂 Birthday</span>}</div><p>{e.text}</p>
+{e.youtubeId && <iframe loading="lazy" src={`https://www.youtube-nocookie.com/embed/${e.youtubeId}`} title={e.text} allowfullscreen></iframe>}
+<div class="acts">{!e.youtubeId && <a class="btn" href={ytSearch(`${e.year} ${e.text.split(/[.:,]/)[0]}`)} target="_blank" rel="noopener">▶ Watch highlights</a>}<a class="btn x" href={share} target="_blank" rel="noopener">Share on 𝕏</a></div></article>

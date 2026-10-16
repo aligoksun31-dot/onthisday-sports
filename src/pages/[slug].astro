@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro"; import Card from "../components/Card.astro"; import Filters from "../components/Filters.astro";
+import { allDates, eventsFor, SITE } from "../data/dates";
+export function getStaticPaths(){ return allDates.map(d=>({params:{slug:d.slug},props:{d}})); }
+const { d } = Astro.props; const list = eventsFor(d.key);
+const i = allDates.findIndex(x=>x.slug===d.slug); const prev=allDates[(i+365)%366], next=allDates[(i+1)%366];
+const title=`What happened in sports on ${d.label}? | On This Day in Sports`;
+const description=list.length?`Sports history on ${d.label}: ${list.slice(0,3).map(e=>`${e.year} ${e.sport}`).join(", ")} and more classic moments and highlights.`:`Classic sports moments, facts and highlights from ${d.label} in history.`;
+const jsonld={"@context":"https://schema.org","@type":"ItemList",name:`Sports moments on ${d.label}`,url:`${SITE}/${d.slug}`,itemListElement:list.map((e,n)=>({"@type":"ListItem",position:n+1,name:`${d.label}, ${e.year}: ${e.text}`}))};
+---
+<Base title={title} description={description} jsonld={jsonld}>
+<h1>What happened in sports on {d.label}</h1>
+<Filters sports={[...new Set(list.map(e=>e.sport))]}/>
+{list.length ? <div class="cards">{list.map(e=><Card e={e} label={d.label} slug={d.slug}/>)}</div> : <p>No moments added for {d.label} yet. Check back soon.</p>}
+<p><a href={`/${prev.slug}`}>← {prev.label}</a> · <a href={`/${next.slug}`}>{next.label} →</a></p>
+</Base>

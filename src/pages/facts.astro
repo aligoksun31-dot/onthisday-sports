@@ -1,0 +1,11 @@
+---
+import Base from "../layouts/Base.astro";
+import { allDates, eventsFor, SITE } from "../data/dates";
+const withEv = allDates.map(d=>({d,list:eventsFor(d.key)})).filter(x=>x.list.length);
+const jsonld={"@context":"https://schema.org","@type":"Dataset",name:"On This Day in Sports facts",url:`${SITE}/facts`,description:"Curated notable sports moments by calendar date."};
+---
+<Base title="Sports history facts by date: full list | On This Day in Sports" description="Plain, structured list of every notable sports moment on this site, organized by calendar date." jsonld={jsonld}>
+<h1>All sports history facts by date</h1>
+<p>Format: Date, Year (Sport): Fact. Source page linked for each date.</p>
+{withEv.map(({d,list})=>(<section><h2 id={d.slug}><a href={`/${d.slug}`}>{d.label}</a></h2><ul>{list.map(e=><li>{d.label}, {e.year} ({e.sport}): {e.text}</li>)}</ul></section>))}
+</Base>

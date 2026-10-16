@@ -1,0 +1,4 @@
+---
+const { sports } = Astro.props;
+---
+{sports.length>1 && <div class="filters"><button class="on" data-sport="all">All</button>{sports.map(s=><button data-sport={s}>{s}</button>)}</div>}
